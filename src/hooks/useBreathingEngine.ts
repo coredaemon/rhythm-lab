@@ -103,6 +103,7 @@ export const useBreathingEngine = (preset: BreathPreset, durationMinutes: number
     if (frameRef.current) cancelAnimationFrame(frameRef.current);
     startedAtRef.current = performance.now();
     phaseSignalRef.current = computed.phaseIndex;
+    audioEngine.playClick('stage');
     setStatus('running');
     frameRef.current = requestAnimationFrame(tick);
   }, [computed.phaseIndex, tick]);
