@@ -2,7 +2,9 @@ import type { BreathPreset, AppSettings } from '../types';
 import { breathingPresets, practiceDurations } from '../data/breathingPresets';
 import { formatTime } from '../lib/time';
 import { useBreathingEngine } from '../hooks/useBreathingEngine';
+import { useWakeLock } from '../hooks/useWakeLock';
 import { TransportControls } from './TransportControls';
+import { WakeLockIndicator } from './WakeLockIndicator';
 
 interface BreathingViewProps {
   settings: AppSettings;
@@ -13,6 +15,7 @@ export const BreathingView = ({ settings, onSettingsChange }: BreathingViewProps
   const preset = breathingPresets.find((item) => item.id === settings.breathingPresetId) ?? breathingPresets[0];
   const engine = useBreathingEngine(preset, settings.breathingDurationMinutes, settings.soundEnabled, settings.volume);
   const active = engine.status === 'running';
+  const wakeLock = useWakeLock(settings.keepScreenAwake, active);
 
   const updatePreset = (nextPreset: BreathPreset) => {
     onSettingsChange({ ...settings, breathingPresetId: nextPreset.id });
@@ -37,6 +40,7 @@ export const BreathingView = ({ settings, onSettingsChange }: BreathingViewProps
         <h2>{engine.status === 'completed' ? 'Готово' : engine.phase.label}</h2>
         <div className="big-time">{formatTime(engine.phaseRemaining)}</div>
         <p className="supporting-time">Осталось всего: {formatTime(engine.totalRemaining)}</p>
+        <WakeLockIndicator enabled={settings.keepScreenAwake} active={active} wakeLock={wakeLock} />
         <div className="progress-track">
           <span style={{ width: `${engine.progress * 100}%` }} />
         </div>

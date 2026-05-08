@@ -48,6 +48,7 @@ export interface AppSettings {
   theme: ThemeMode;
   soundEnabled: boolean;
   volume: number;
+  keepScreenAwake: boolean;
   activeMode: AppMode;
   firstRunDismissed: boolean;
   breathingPresetId: string;

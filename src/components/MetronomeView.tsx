@@ -1,7 +1,9 @@
 import type { AppSettings, Meter } from '../types';
 import { useMetronomeEngine } from '../hooks/useMetronomeEngine';
+import { useWakeLock } from '../hooks/useWakeLock';
 import { TransportControls } from './TransportControls';
 import { BpmControl } from './BpmControl';
+import { WakeLockIndicator } from './WakeLockIndicator';
 
 const meters: Meter[] = ['1/4', '2/4', '3/4', '4/4', '6/8'];
 
@@ -13,6 +15,7 @@ interface MetronomeViewProps {
 export const MetronomeView = ({ settings, onSettingsChange }: MetronomeViewProps) => {
   const engine = useMetronomeEngine(settings.metronome, settings.soundEnabled, settings.volume);
   const active = engine.status === 'running';
+  const wakeLock = useWakeLock(settings.keepScreenAwake, active);
 
   const updateBpm = (bpm: number) => {
     onSettingsChange({
@@ -37,6 +40,7 @@ export const MetronomeView = ({ settings, onSettingsChange }: MetronomeViewProps
         <h2>Метроном</h2>
         <div className="big-time">{settings.metronome.bpm}</div>
         <p className="supporting-time">BPM</p>
+        <WakeLockIndicator enabled={settings.keepScreenAwake} active={active} wakeLock={wakeLock} />
         <TransportControls
           status={engine.status}
           onStart={engine.start}

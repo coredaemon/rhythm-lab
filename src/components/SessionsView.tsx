@@ -4,8 +4,10 @@ import { demoSession } from '../data/sessions';
 import { breathingPresets } from '../data/breathingPresets';
 import { formatTime, uid, clamp } from '../lib/time';
 import { useSessionEngine } from '../hooks/useSessionEngine';
+import { useWakeLock } from '../hooks/useWakeLock';
 import { TransportControls } from './TransportControls';
 import { BpmControl } from './BpmControl';
+import { WakeLockIndicator } from './WakeLockIndicator';
 
 const meters: Meter[] = ['1/4', '2/4', '3/4', '4/4', '6/8'];
 
@@ -81,6 +83,7 @@ export const SessionsView = ({ settings, savedSessions, onSaveSessions }: Sessio
   const [draft, setDraft] = useState<RhythmSession>(() => allSessions[0]);
   const engine = useSessionEngine(draft, settings.soundEnabled, settings.volume);
   const active = engine.status === 'running';
+  const wakeLock = useWakeLock(settings.keepScreenAwake, active);
 
   const setStep = (stepId: string, patch: Partial<SessionStep>) => {
     setDraft((current) => ({
@@ -156,6 +159,7 @@ export const SessionsView = ({ settings, savedSessions, onSaveSessions }: Sessio
           Осталось этапа: {formatTime(engine.stepRemaining)} · Всего: {formatTime(engine.totalRemaining)}
           {engine.breathingPhase ? ` · ${engine.breathingPhase.label} ${formatTime(engine.breathingPhaseRemaining)}` : ''}
         </p>
+        <WakeLockIndicator enabled={settings.keepScreenAwake} active={active} wakeLock={wakeLock} />
         <div className="progress-track">
           <span style={{ width: `${engine.progress * 100}%` }} />
         </div>

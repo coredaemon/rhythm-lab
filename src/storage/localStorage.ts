@@ -7,6 +7,7 @@ export const defaultSettings: AppSettings = {
   theme: 'light',
   soundEnabled: true,
   volume: 0.7,
+  keepScreenAwake: true,
   activeMode: 'breathing',
   firstRunDismissed: false,
   breathingPresetId: 'box',

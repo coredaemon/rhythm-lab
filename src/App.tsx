@@ -43,8 +43,10 @@ export const App = () => {
       <SoundSettings
         enabled={settings.soundEnabled}
         volume={settings.volume}
+        keepScreenAwake={settings.keepScreenAwake}
         onEnabledChange={(soundEnabled) => setSettings({ ...settings, soundEnabled })}
         onVolumeChange={(volume) => setSettings({ ...settings, volume })}
+        onKeepScreenAwakeChange={(keepScreenAwake) => setSettings({ ...settings, keepScreenAwake })}
       />
     </div>
   );

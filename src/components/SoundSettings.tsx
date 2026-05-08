@@ -1,11 +1,22 @@
 interface SoundSettingsProps {
   enabled: boolean;
   volume: number;
+  keepScreenAwake: boolean;
   onEnabledChange: (enabled: boolean) => void;
   onVolumeChange: (volume: number) => void;
+  onKeepScreenAwakeChange: (enabled: boolean) => void;
 }
 
-export const SoundSettings = ({ enabled, volume, onEnabledChange, onVolumeChange }: SoundSettingsProps) => (
+const wakeLockSupported = () => typeof navigator !== 'undefined' && 'wakeLock' in navigator;
+
+export const SoundSettings = ({
+  enabled,
+  volume,
+  keepScreenAwake,
+  onEnabledChange,
+  onVolumeChange,
+  onKeepScreenAwakeChange
+}: SoundSettingsProps) => (
   <section className="settings-card sound-card">
     <label className="toggle-row">
       <input type="checkbox" checked={enabled} onChange={(event) => onEnabledChange(event.target.checked)} />
@@ -22,6 +33,21 @@ export const SoundSettings = ({ enabled, volume, onEnabledChange, onVolumeChange
         disabled={!enabled}
         onChange={(event) => onVolumeChange(Number(event.target.value))}
       />
+    </label>
+    <label className="toggle-row wake-toggle">
+      <input
+        type="checkbox"
+        checked={keepScreenAwake}
+        onChange={(event) => onKeepScreenAwakeChange(event.target.checked)}
+      />
+      <span>
+        Не выключать экран
+        <small>
+          {wakeLockSupported()
+            ? 'Пока идёт практика, приложение будет пытаться удерживать экран включённым.'
+            : 'На этом устройстве удержание экрана может не поддерживаться браузером.'}
+        </small>
+      </span>
     </label>
   </section>
 );
